@@ -71,3 +71,52 @@ pub fn playground() {
     print_bytes(&numbers);
 }
 ```
+
+### Memory Management on Struct
+
+```rust
+#[inline(never)]
+pub fn playground() {
+    let mut point = Point3D { x: 15, y: 14, z: 13 };
+    point.x += 1;
+    point.y += 2;
+    point.z += 3;
+
+    print_bytes(&point);
+}
+```
+
+On looking at the assembly code,
+
+```assembly
+cargo asm mm_rust::playground
+mm_rust::playground:
+ sub     rsp, 56
+ movabs  rax, 68719476752
+ mov     qword, ptr, [rsp, +, 44], rax
+ mov     dword, ptr, [rsp, +, 52], 16
+ lea     rcx, [rsp, +, 44]
+ call    mm_rust::print::print_bytes
+ nop
+ add     rsp, 56
+ ret
+```
+
+Again the compiler is very smart, it allocates the memory by shifting down the stack pointer by 56, and then the system uses this number `68719476752` is `0x10 00 00 00 10` in hex, i.e, `16` in decimals, So, this `movabs rax, 68719476752`, is moving `68719476752` to register `rax`, then moving `rax` to the stack.
+
+> So, if we create structure in rust we are effectively allocating memory on the stack.
+
+But, what if we don't want it on Stack but want it on the heap, so this is where `Box` comes in...
+
+```rust
+#[inline(never)]
+pub fn playground() {
+    let mut point = Box::new(Point { x: 15, y: 14 });
+    point.x += 1;
+    point.y += 2;
+
+    print_bytes(&point);
+}
+```
+
+So, this uses `__rust_alloc` and `__rust_dealloc`, which confirms the use of heap for Box. The use of `__rust_dealloc`, is one of the features of rust where it stands outs, as it does the garbage collection for you and this happens due to the ownership principle.
