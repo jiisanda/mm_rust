@@ -11,8 +11,7 @@ fn main() {
 
 #[inline(never)]
 pub fn playground() {
-    let mut x = 42;
-    x += 1;
+    let numbers = [0x68, 0x69, 0x0a, 0];
 
-    print_bytes(&x);
+    print_bytes(&numbers);
 }
