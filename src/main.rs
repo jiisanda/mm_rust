@@ -4,6 +4,7 @@
 use print::{print_array, print_bytes};
 
 mod print;
+mod lor;
 
 struct Point {
     x: i32,
