@@ -5,6 +5,7 @@ use print::{print_array, print_bytes};
 
 mod print;
 mod lor;
+mod happy_lor;
 
 struct Point {
     x: i32,
@@ -33,5 +34,7 @@ pub fn playground() {
     point.x += 1;
     point.y += 2;
 
-    print_bytes(&point);
+    let point2 = point;         // transfer of ownership
+
+    print_bytes(&point2);
 }
