@@ -12,7 +12,7 @@ impl MyPreciousRing {
 }
 
 mod we_are_all_friends_here {
-    #[derive!(Debug, Copy, Clone)]
+    #[derive(Debug, Copy, Clone)]
     pub struct MyPreciousRing {
         engravings: &'static str
     }

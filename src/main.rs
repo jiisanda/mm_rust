@@ -30,11 +30,14 @@ fn main() {
 
 #[inline(never)]
 pub fn playground() {
-    let mut point = Box::new(Point { x: 15, y: 14 });
+    let mut point = PointCopy { x: 15, y: 14 };
     point.x += 1;
     point.y += 2;
 
-    let point2 = point;         // transfer of ownership
+    let mut point2 = point;
+    point2.x += 1;
+    point2.y += 2;
 
+    print_bytes(&point);
     print_bytes(&point2);
 }
