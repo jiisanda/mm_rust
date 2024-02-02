@@ -6,6 +6,7 @@ use print::{print_array, print_bytes};
 mod print;
 mod lor;
 mod happy_lor;
+mod lor_rc;
 
 struct Point {
     x: i32,
@@ -25,7 +26,8 @@ struct PointCopy {
 }
 
 fn main() {
-    playground();
+    lor_rc::share_the_ring();
+    // playground();
 }
 
 #[inline(never)]
