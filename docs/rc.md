@@ -48,8 +48,43 @@ And if we try printing, the reference of both the rings `frodos_ring` and `samwi
 the same memory location.
 
 ```rust
-println!(
+println!("{:p}/t{:p}"
         fordos_ring.as_ref(),           // 0x225a1bcfd70
         samwises_ring.as_ref()          // 0x225a1bcfd70
     );
 ```
+
+This concept in other languages may be referred to as smart pointers, but in rust it is RefCounters.
+
+### Borrowing an Rc mutable
+
+```rust
+let mut frodos_ring = frodos_ring;
+head(&mut frodos_ting);             // will give an error: cannot borrow data in an `Rc` as mutable
+```
+
+We know what is mutable borrow... that we are still the owner but we give the mutable borrow to someone else, that someone
+else can write into the data structure, and this is what the `heat()` method does, it changes the engraving, but it is 
+not allowed, why? The reason is simple, if we have a single object, and we have to borrow RefCounters, that reference all 
+these object, if lot of people takes the mutable borrow on this memory location, we can easily run into a risk condition.
+As all these owners of these RefCounters will write to this memory location, that would be end up into lot of problems.
+So what is the solution for that...
+
+#### RefCell
+
+```rust
+pub fn share_and_alter() {
+    let saurons_ring = MyPreciousRing::forge();
+
+    // somehow gets to frodo
+    let frodos_ring = Rc::new(RefCell::new(saurons_ring));
+}
+```
+
+`RefCell` is a reference to a memory, `RefCell` has a unique capability, it can check the ownership and borrowing rules
+at runtime, not at compile time, so its essentially an ownership and borrowing checker, build into the compiler that does 
+not get executed at compile time but at running time. If more than one location of program asks for the mutable borrow at
+the same time it will say Nope!, but it will not check at compile time, because compiler cannot know, when somebody in our
+program is asking for mutable borrow. And this is what RefCell is, and combining it with `ref_couter` we get something more
+powerful a pattern which is called `internal mutability pattern`. We are having something that have multiple owners, with
+RefCounting and still the capability to be borrowed in a mutable way.
