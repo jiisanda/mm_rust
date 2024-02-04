@@ -7,6 +7,7 @@ mod print;
 mod lor;
 mod happy_lor;
 mod lor_rc;
+mod lifetime;
 
 struct Point {
     x: i32,
